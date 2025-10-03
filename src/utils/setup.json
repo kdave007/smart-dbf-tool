@@ -1,0 +1,76 @@
+{
+    "db":{"name":"dbf_process_arauc"},
+    "actions":{
+        "create":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE"],
+        "delete":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE"],
+        "execute":"create"
+    },
+    "tables":[
+        {
+            "name":"EJEMPLO",
+            "schema": "natural_key",
+            "id_fields": ["ID"],
+            "additional_columns": [{ "name": "columna_extra", "type": "INTEGER", "default": 0 }],
+            "skip_columns":["eliminado", "referencia"]
+
+        },
+        {
+           "name":"VENTA",
+           "schema": "natural_key",
+           "id_fields": ["NO_REFEREN"],
+           "additional_columns": [],
+           "skip_columns":[]
+        },
+        {
+            "name":"PARTVTA",
+            "schema": "physical_position", 
+            "id_fields": ["RECNO"],
+            "additional_columns": [],
+            "skip_columns":[]
+            
+        },
+        {
+            "name":"CANOTA",
+            "schema": "natural_key",
+            "id_fields": ["NOTA_FOLIO"],
+            "additional_columns": [],
+            "skip_columns":[]
+        },
+        {
+           "name":"CUNOTA",
+           "schema": "physical_position", 
+           "id_fields": ["RECNO"],
+           "additional_columns": [],
+           "skip_columns":[]
+        },
+        {
+           "name":"VALES",
+           "schema": "natural_key",
+           "id_fields": ["NO_CONSEC"],
+           "additional_columns": [],
+           "skip_columns":[]
+        },
+        {
+            "name":"PARVALES",
+            "schema": "physical_position", 
+            "id_fields": ["RECNO"],
+            "additional_columns": [],
+            "skip_columns":[]
+        },
+        {
+            "name":"XCORTE",
+            "schema": "physical_position", 
+            "id_fields": ["RECNO"],
+            "additional_columns": [],
+            "skip_columns":[]
+        },
+        {
+            "name":"FLUJORES",
+            "type": "composed_hash",
+            "id_fields": ["IDFLUJO"],
+            "additional_columns": [],
+            "skip_columns":[],
+            "hash_fields":["REF_NUM","ING_EG","IDFLUJO"]
+        }
+    ]
+}
