@@ -1,0 +1,28 @@
+{
+    "schemas":{
+        "options":[],
+        "tables":{
+            "reintentos": {
+                "columns":[
+                    { "name": "id_local", "type": "INTEGER", "default": 0, "comment": "id local, para ubicar registro, se necesita saber la tabla" },
+                    { "name": "tabla", "type": "TEXT", "not_null": true, "comment": "nombre de la tabla que proceso" },
+                    { "name": "referencia", "type": "TEXT", "comment": "Folio o campo de referencia si aplica" },
+                    { "name": "status", "type": "INTEGER", "default": 0, "comment": "0=pending, 1=completed, 2=error" },
+                    { "name": "insertado", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Fecha cuando se insertó" },
+                    { "name": "ultima_revision", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Última vez que se detectó este hash" }
+                ]
+            },
+            "api_log": {
+                "columns":[
+                    { "name": "tabla", "type": "TEXT", "not_null": true, "comment": "nombre de la tabla que proceso" },
+                    { "name": "lote_referencia", "type": "TEXT", "comment": "Folio o campo de referencia si aplica" },
+                    { "name": "documento", "type": "TEXT", "comment": "documento enviado" },
+                    { "name": "respuesta_post", "type": "TEXT", "comment": "respuest del post" },
+                    { "name": "respuesta_get", "type": "TEXT", "comment": "respuesta del get" },
+                    { "name": "insertado", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Fecha cuando se insertó" },
+                    { "name": "modificado", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Última vez que se detectó este hash" }
+                ]
+            }
+        }
+    }
+}

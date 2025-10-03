@@ -4,7 +4,8 @@
         "description":"unique id made by natural keys (if more than 1, combined) uses a unique field or more, physical_position uses RECNO (position in the dbf) and hash creates hash by combined fields",
         "common":{
             "columns":[
-                { "name": "hash", "type": "TEXT", "not_null": true, "comment": "Hash de los campos relevantes del registro" },
+                { "name": "id_local", "type": "INTEGER", "not_null": true, "pk": true,"autoincrement": true,"comment": "ID único local de la BD SQLite (interno)" },
+                { "name": "hash_comparador", "type": "TEXT", "not_null": true, "comment": "Hash de los campos relevantes del registro" },
                 { "name": "id_corte", "type": "TEXT", "not_null": true, "pk": true },
                 { "name": "referencia", "type": "TEXT", "comment": "Folio o campo de referencia si aplica" },
                 { "name": "fecha_original", "type": "TEXT", "comment": "Fecha capturada en DBF, si aplica" },
@@ -18,7 +19,7 @@
         },
         "composed_hash":{
             "columns": [
-                { "name": "hash_unico", "type": "TEXT", "not_null": true, "pk": true, "comment": "Identificador estable (ej: campo IDFLUJO o combinación estable)" }
+                { "name": "hash_id", "type": "TEXT", "not_null": true, "pk": true, "comment": "Identificador estable (ej: campo IDFLUJO o combinación estable)" }
               ]
         },
         "physical_position":{

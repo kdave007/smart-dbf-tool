@@ -1,12 +1,34 @@
 from utils.table_spec_manager import TableSpecManager
+from utils.table_list_manager import TableListManager
+from utils.database_manager import DatabaseManager
 import json
 
 def main():
-    # Create an instance of TableSpecManager
-    spec_manager = TableSpecManager(None, None)
+    # Test database operations
+    print("=== Database Manager Test ===")
     
-    # Test with some table names from setup.json
-    table_names = ["VENTA", "PARTVTA", "CANOTA", "CUNOTA"]
+    with DatabaseManager() as db_manager:
+        # Execute the configured action (create or delete tables)
+        success = db_manager.execute_action()
+        
+        if success:
+            print("Database operations completed successfully!")
+        else:
+            print("Some database operations failed.")
+    
+    print("\n" + "=" * 50)
+    
+    # Original table specification test
+    print("=== Table Specifications Test ===")
+    
+    # Create instances of managers
+    spec_manager = TableSpecManager(None, None)
+    list_manager = TableListManager(None, None)
+    
+    # Get table names from setup.json based on execute action
+    table_names = list_manager.get_list()
+
+    print(f"tables {table_names}")
     
     # Get specifications for the tables
     specs = spec_manager.get_spec(table_names)

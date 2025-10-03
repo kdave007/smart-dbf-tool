@@ -1,5 +1,5 @@
 {
-    "db":{"name":"dbf_process_arauc"},
+    "db":{"name":"dbf_process_arauc", "path":"C:\\Users\\campo\\Documents\\projects\\smart-dbf-tool\\src"},
     "actions":{
         "create":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE"],
         "delete":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE"],
