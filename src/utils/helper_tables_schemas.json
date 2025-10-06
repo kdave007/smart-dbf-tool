@@ -22,6 +22,13 @@
                     { "name": "insertado", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Fecha cuando se insertó" },
                     { "name": "modificado", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Última vez que se detectó este hash" }
                 ]
+            },
+            "mapeo_cortes": {
+                "columns":[
+                    { "name": "corte_id", "type": "TEXT", "comment": "Identificador único del corte" },
+                    { "name": "fecha_inicio", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Fecha cuando inicia el rango" },
+                    { "name": "insertado", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Fecha cuando se insertó" }
+                ]
             }
         }
     }

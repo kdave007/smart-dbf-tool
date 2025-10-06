@@ -112,7 +112,7 @@ class DatabaseManager:
             # Build column definitions
             column_defs = []
             for column in columns:
-                is_pk = (column.get('name') == primary_key_column)
+                is_pk = (primary_key_column and column.get('name') == primary_key_column)
                 col_def = self._build_column_definition(column, is_pk)
                 column_defs.append(col_def)
             
@@ -139,6 +139,15 @@ class DatabaseManager:
         """Determine the primary key column based on schema type from JSON"""
         schema_type = table_spec.get('schema')
         columns = table_spec.get('table_columns', [])
+        
+        # Handle helper tables differently - they may not have primary keys
+        if schema_type == 'helper':
+            # For helper tables, look for any column marked as pk in the table columns
+            for column in columns:
+                if column.get('pk', False):
+                    return column.get('name')
+            # Helper tables might not have primary keys, return None
+            return None
         
         # Get the schema definitions to find the correct primary key column
         schemas = self.spec_manager._fetch_data_schemas()

@@ -8,20 +8,24 @@ class TableSpecManager:
         
         self.setup_path = os.path.join(utils_dir, "setup.json")
         self.data_tables_path = os.path.join(utils_dir, "data_tables_schemas.json")
+        self.helper_tables_path = os.path.join(utils_dir, "helper_tables_schemas.json")
 
     def get_spec(self, targets):
         """
             loops array of table names and returns their specs object
         """
         # Fetch schemas once for all tables
-        schemas = self._fetch_data_schemas()
-        if not schemas:
-            return []
+        data_schemas = self._fetch_data_schemas()
+        helper_schemas = self._fetch_helper_schemas()
         
         specs_by_table_name = []
 
         for target in targets:
-            current = self._fetch_specs(target, schemas)
+            # First try to find in helper tables
+            current = self._fetch_helper_specs(target, helper_schemas)
+            if not current:
+                # If not found in helper tables, try data tables
+                current = self._fetch_specs(target, data_schemas)
             specs_by_table_name.append(current)
         
         return specs_by_table_name
@@ -80,6 +84,23 @@ class TableSpecManager:
         except json.JSONDecodeError:
             print(f"Invalid data tables JSON in setup file: {self.data_tables_path}")
             return None
+    
+    def _fetch_helper_schemas(self):
+        """
+        Reads helper_tables_schemas.json and returns the helper table schemas
+        """
+        try:
+            with open(self.helper_tables_path, 'r') as file:
+                helper_schema = json.load(file)
+            
+            return helper_schema.get('schemas', {})
+            
+        except FileNotFoundError:
+            print(f"Helper tables schema json file not found: {self.helper_tables_path}")
+            return {}
+        except json.JSONDecodeError:
+            print(f"Invalid helper tables JSON in file: {self.helper_tables_path}")
+            return {}
 
 
     def _fetch_specs(self, table_name, schemas):
@@ -125,5 +146,30 @@ class TableSpecManager:
             'table_columns': all_columns,
             'additional_columns': additional_columns,
             'skip_columns': skip_columns
+        }
+    
+    def _fetch_helper_specs(self, table_name, helper_schemas):
+        """
+        Fetch specifications for helper tables that don't follow the data table schema pattern
+        Returns the same format as _fetch_specs for consistency
+        """
+        if not helper_schemas or 'tables' not in helper_schemas:
+            return None
+        
+        helper_tables = helper_schemas.get('tables', {})
+        if table_name not in helper_tables:
+            return None
+        
+        table_def = helper_tables[table_name]
+        columns = table_def.get('columns', [])
+        
+        # Helper tables don't use the schema system, so we return a simplified spec
+        return {
+            'name': table_name,
+            'schema': 'helper',  # Mark as helper table
+            'id_fields': [],
+            'table_columns': columns,
+            'additional_columns': [],
+            'skip_columns': []
         }
         

@@ -1,8 +1,8 @@
 {
-    "db":{"name":"dbf_process_arauc", "path":"C:\\Users\\campo\\Documents\\projects\\smart-dbf-tool\\src"},
+    "db":{"name":"dbf_process_ejemplo", "path":"C:\\Users\\campo\\Documents\\projects\\smart-dbf-tool\\src"},
     "actions":{
-        "create":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE"],
-        "delete":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE"],
+        "create":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE","reintentos","api_log","mapeo_cortes"],
+        "delete":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE","reintentos","api_log","mapeo_cortes"],
         "execute":"create"
     },
     "tables":[
