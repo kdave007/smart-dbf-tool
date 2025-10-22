@@ -4,17 +4,17 @@
         "description":"unique id made by natural keys (if more than 1, combined) uses a unique field or more, physical_position uses RECNO (position in the dbf) and hash creates hash by combined fields",
         "common":{
             "columns":[
-                { "name": "id_local", "type": "INTEGER", "not_null": true, "pk": true,"autoincrement": true,"comment": "ID único local de la BD SQLite (interno)" },
                 { "name": "hash_comparador", "type": "TEXT", "not_null": true, "comment": "Hash de los campos relevantes del registro" },
-                { "name": "id_corte", "type": "TEXT", "not_null": true, "pk": true },
+                { "name": "batch_version", "type": "TEXT", "pk": true },
                 { "name": "referencia", "type": "TEXT", "comment": "Folio o campo de referencia si aplica" },
                 { "name": "fecha_original", "type": "TEXT", "comment": "Fecha capturada en DBF, si aplica" },
                 { "name": "status", "type": "INTEGER", "default": 0, "comment": "0=pending, 1=completed, 2=error" },
                 { "name": "insertado", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Fecha cuando se insertó" },
                 { "name": "ultima_revision", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Última vez que se detectó este hash" },
                 { "name": "eliminado", "type": "INTEGER", "default": 0, "comment": "Marcado como eliminado 0/1" },
-                { "name": "id_servidor", "type": "INTEGER", "default": 0, "comment": "id registrado en el servidor" },
-                { "name": "id_cola", "type": "INTEGER", "default": 0, "comment": "id asignado en cola de servidor, cuando se sube el doc" }
+                { "name": "psql_id", "type": "INTEGER", "default": 0, "comment": "id registrado en el servidor" },
+                { "name": "id_cola", "type": "INTEGER", "default": 0, "comment": "id asignado en cola de servidor, cuando se sube el doc" },
+                { "name": "clave_eliminacion","type": "TEXT","comment": "Motivo eliminación: 'usuario', 'corte'"}
             ]
         },
         "composed_hash":{
@@ -24,12 +24,12 @@
         },
         "physical_position":{
             "columns": [
-                { "name": "recno", "type": "INTEGER", "not_null": true, "pk": true, "comment": "Número de registro físico en el DBF" }
+                { "name": "recno_id", "type": "INTEGER", "not_null": true, "pk": true, "comment": "Número de registro físico en el DBF" }
             ]
         },
         "natural_key":{
             "columns": [
-                { "name": "id_unico", "type": "TEXT", "not_null": true, "pk": true, "comment": "Hash o concatenación de las claves naturales (ej: NO_REFEREN)" }
+                { "name": "natural_id", "type": "TEXT", "not_null": true, "pk": true, "comment": "Hash o concatenación de las claves naturales (ej: NO_REFEREN)" }
             ]
         }
     }

@@ -70,8 +70,13 @@ class DatabaseManager:
         }
         return type_mapping.get(json_type.upper(), 'TEXT')
     
-    def _build_column_definition(self, column, is_primary_key=False):
-        """Build SQL column definition from JSON column spec"""
+    def _build_column_definition(self, column, is_single_pk=False):
+        """Build SQL column definition from JSON column spec
+        
+        Args:
+            column: Column specification dict
+            is_single_pk: True if this is the only primary key column (allows inline PK with AUTOINCREMENT)
+        """
         name = column.get('name')
         col_type = self._map_column_type(column.get('type', 'TEXT'))
         
@@ -81,9 +86,13 @@ class DatabaseManager:
         if column.get('not_null', False):
             definition += " NOT NULL"
         
-        # Only add PRIMARY KEY if this is the designated primary key column
-        if is_primary_key:
+        # Only add inline PRIMARY KEY if this is a single primary key column
+        # For composite PKs, we'll use a table constraint instead
+        if is_single_pk:
             definition += " PRIMARY KEY"
+            # Add AUTOINCREMENT only for INTEGER single primary keys
+            if column.get('autoincrement', False) and col_type == 'INTEGER':
+                definition += " AUTOINCREMENT"
         
         if 'default' in column:
             default_value = column['default']
@@ -106,19 +115,26 @@ class DatabaseManager:
             table_name = table_spec['name']
             columns = table_spec['table_columns']
             
-            # Find the primary key column based on schema type
-            primary_key_column = self._get_primary_key_column(table_spec)
+            # Find all primary key columns
+            pk_columns = [col.get('name') for col in columns if col.get('pk', False)]
             
             # Build column definitions
             column_defs = []
             for column in columns:
-                is_pk = (primary_key_column and column.get('name') == primary_key_column)
-                col_def = self._build_column_definition(column, is_pk)
+                # Only use inline PRIMARY KEY if there's exactly one PK column
+                is_single_pk = (len(pk_columns) == 1 and column.get('name') in pk_columns)
+                col_def = self._build_column_definition(column, is_single_pk)
                 column_defs.append(col_def)
             
             # Create table SQL
             sql = f"CREATE TABLE IF NOT EXISTS {table_name} (\n"
             sql += ",\n".join(f"    {col_def}" for col_def in column_defs)
+            
+            # Add composite primary key constraint if there are multiple PK columns
+            if len(pk_columns) > 1:
+                pk_constraint = f"PRIMARY KEY ({', '.join(pk_columns)})"
+                sql += f",\n    {pk_constraint}"
+            
             sql += "\n)"
             
             print(f"Creating table {table_name}...")
@@ -135,41 +151,6 @@ class DatabaseManager:
             print(f"Error creating table {table_spec.get('name', 'unknown')}: {e}")
             return False
     
-    def _get_primary_key_column(self, table_spec):
-        """Determine the primary key column based on schema type from JSON"""
-        schema_type = table_spec.get('schema')
-        columns = table_spec.get('table_columns', [])
-        
-        # Handle helper tables differently - they may not have primary keys
-        if schema_type == 'helper':
-            # For helper tables, look for any column marked as pk in the table columns
-            for column in columns:
-                if column.get('pk', False):
-                    return column.get('name')
-            # Helper tables might not have primary keys, return None
-            return None
-        
-        # Get the schema definitions to find the correct primary key column
-        schemas = self.spec_manager._fetch_data_schemas()
-        if not schemas or schema_type not in schemas:
-            # Fallback: find any column marked as pk in the table columns
-            for column in columns:
-                if column.get('pk', False):
-                    return column.get('name')
-            return 'id_corte'  # Ultimate fallback
-        
-        # Get the schema-specific columns and find the primary key
-        schema_columns = schemas[schema_type].get('columns', [])
-        for column in schema_columns:
-            if column.get('pk', False):
-                return column.get('name')
-        
-        # If no primary key found in schema, look in table columns
-        for column in columns:
-            if column.get('pk', False):
-                return column.get('name')
-        
-        return 'id_corte'  # Ultimate fallback
     
     def drop_table(self, table_name):
         """Drop a table"""

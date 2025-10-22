@@ -1,10 +1,14 @@
 {
-    "db":{"name":"dbf_process_ejemplo", "path":"C:\\Users\\campo\\Documents\\projects\\smart-dbf-tool\\src"},
+    "db":{"name":"dbf_test", "path":"C:\\Users\\campo\\Documents\\projects\\smart-dbf-tool\\src"},
     "actions":{
         "create":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE","reintentos","api_log","mapeo_cortes"],
         "delete":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE","reintentos","api_log","mapeo_cortes"],
         "execute":"create"
     },
+    "batch_version":{
+            "comment":"id de versión de registros cargados",
+            "id":"batch_001"
+        },
     "tables":[
         {
             "name":"EJEMPLO",
@@ -59,10 +63,11 @@
         },
         {
             "name":"XCORTE",
-            "schema": "physical_position", 
-            "id_fields": ["RECNO"],
+            "schema": "composed_hash", 
+            "id_fields": ["FECHA"],
             "additional_columns": [],
-            "skip_columns":[]
+            "skip_columns":[],
+            "hash_fields":["FECHA","TIENDA"]
         },
         {
             "name":"FLUJORES",
