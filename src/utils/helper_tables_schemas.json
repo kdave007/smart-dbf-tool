@@ -23,11 +23,17 @@
                     { "name": "modificado", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Última vez que se detectó este hash" }
                 ]
             },
-            "mapeo_cortes": {
+            "codigo_estado_registro": {
                 "columns":[
-                    { "name": "corte_id", "type": "TEXT", "comment": "Identificador único del corte" },
-                    { "name": "fecha_inicio", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Fecha cuando inicia el rango" },
-                    { "name": "insertado", "type": "TEXT", "default": "CURRENT_TIMESTAMP", "comment": "Fecha cuando se insertó" }
+                    { "name": "code", "type": "INTEGER", "pk": true },
+                    { "name": "name", "type": "TEXT", "not_null": true },
+                    { "name": "description", "type": "TEXT" }
+                ],
+                "values":[
+                    {"code":0, "name":"ERROR", "description":"Hubo un error con el registro"},
+                    {"code":1, "name":"BATCH_QUEUED", "description":"Lote de registros exitosamente encolado"},
+                    {"code":2, "name":"COMPLETED", "description":"Registro exitosamente procesado"},
+                    {"code":3, "name":"NOT_FOUND", "description":"No se encontró el registro"}
                 ]
             }
         }

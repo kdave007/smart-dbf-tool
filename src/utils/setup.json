@@ -1,8 +1,8 @@
 {
     "db":{"name":"dbf_test", "path":"C:\\Users\\campo\\Documents\\projects\\smart-dbf-tool\\src"},
     "actions":{
-        "create":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE","reintentos","api_log","mapeo_cortes"],
-        "delete":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE","reintentos","api_log","mapeo_cortes"],
+        "create":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE","reintentos","api_log","mapeo_cortes","codigo_estado_registro"],
+        "delete":["VENTA","PARTVTA","VALES","PARVALES","CANOTA","CUNOTA","XCORTE","reintentos","api_log","mapeo_cortes","codigo_estado_registro"],
         "execute":"create"
     },
     "batch_version":{

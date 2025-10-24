@@ -162,6 +162,7 @@ class TableSpecManager:
         
         table_def = helper_tables[table_name]
         columns = table_def.get('columns', [])
+        values = table_def.get('values', [])  # Get values if they exist
         
         # Helper tables don't use the schema system, so we return a simplified spec
         return {
@@ -170,6 +171,7 @@ class TableSpecManager:
             'id_fields': [],
             'table_columns': columns,
             'additional_columns': [],
-            'skip_columns': []
+            'skip_columns': [],
+            'values': values  # Include values for insertion
         }
         

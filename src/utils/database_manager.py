@@ -145,12 +145,50 @@ class DatabaseManager:
             self.connection.commit()
             
             print(f"Table {table_name} created successfully")
+            
+            # Insert initial values if they exist in the spec
+            if 'values' in table_spec and table_spec['values']:
+                self._insert_initial_values(table_spec)
+            
             return True
             
         except Exception as e:
             print(f"Error creating table {table_spec.get('name', 'unknown')}: {e}")
             return False
     
+    
+    def _insert_initial_values(self, table_spec):
+        """Insert initial values into a table after creation"""
+        table_name = table_spec['name']
+        values = table_spec.get('values', [])
+        
+        if not values:
+            return
+        
+        try:
+            cursor = self.connection.cursor()
+            
+            for value_row in values:
+                # Get column names from the value row keys
+                columns = list(value_row.keys())
+                placeholders = ', '.join(['?' for _ in columns])
+                column_names = ', '.join(columns)
+                
+                # Build INSERT statement
+                sql = f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})"
+                
+                # Get values in the same order as columns
+                values_tuple = tuple(value_row[col] for col in columns)
+                
+                print(f"Inserting into {table_name}: {value_row}")
+                cursor.execute(sql, values_tuple)
+            
+            self.connection.commit()
+            print(f"Inserted {len(values)} initial values into {table_name}")
+            
+        except Exception as e:
+            print(f"Error inserting initial values into {table_name}: {e}")
+            # Don't raise the exception, just log it - table creation was successful
     
     def drop_table(self, table_name):
         """Drop a table"""
